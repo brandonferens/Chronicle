@@ -1,6 +1,6 @@
 <?php
 
-namespace Kenarkose\Transit\Facade;
+namespace Kenarkose\Chronicle;
 
 
 use Illuminate\Support\Facades\Facade;
