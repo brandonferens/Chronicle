@@ -123,11 +123,6 @@ class RecordsActivityTest extends TestBase {
 
         $category = $this->getCategory();
 
-        $this->assertCount(
-            1,
-            chronicle()->getAllRecords()
-        );
-
         $this->assertEquals(
             Activity::where('subject_id', $category->id)->first()->user_id,
             auth()->user()->id
@@ -144,11 +139,6 @@ class RecordsActivityTest extends TestBase {
 
         $comment = $this->getComment(42);
 
-        $this->assertCount(
-            1,
-            chronicle()->getAllRecords()
-        );
-
         $this->assertEquals(
             Activity::where('subject_id', $comment->id)->first()->user_id,
             42
@@ -164,11 +154,6 @@ class RecordsActivityTest extends TestBase {
         );
 
         $quote = $this->getQuote(42);
-
-        $this->assertCount(
-            1,
-            chronicle()->getAllRecords()
-        );
 
         $this->assertEquals(
             Activity::where('subject_id', $quote->id)->first()->user_id,
