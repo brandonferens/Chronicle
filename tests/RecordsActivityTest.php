@@ -1,6 +1,5 @@
 <?php
 
-use Kenarkose\Chronicle\Activity;
 
 class RecordsActivityTest extends TestBase {
 
@@ -12,6 +11,18 @@ class RecordsActivityTest extends TestBase {
         $user = User::create(['email' => 'john@doe.com']);
 
         auth()->login($user);
+
+        // We have to reboot event listeners due to an issue with phpunit
+        // @link http://stackoverflow.com/questions/17428050/laravel-4-model-events-dont-work-with-phpunit
+
+        Category::flushEventListeners();
+        Category::boot();
+
+        Comment::flushEventListeners();
+        Comment::boot();
+
+        Quote::flushEventListeners();
+        Quote::boot();
     }
 
     protected function getCategory()
@@ -94,7 +105,7 @@ class RecordsActivityTest extends TestBase {
 
         $this->assertCount(
             1,
-            $this->app->make('chronicle')->getAllRecords()
+            chronicle()->getAllRecords()
         );
 
         $comment->user_id = 2;
@@ -123,6 +134,11 @@ class RecordsActivityTest extends TestBase {
 
         $category = $this->getCategory();
 
+        $this->assertCount(
+            1,
+            chronicle()->getAllRecords()
+        );
+
         $this->assertEquals(
             Activity::where('subject_id', $category->id)->first()->user_id,
             auth()->user()->id
@@ -139,6 +155,11 @@ class RecordsActivityTest extends TestBase {
 
         $comment = $this->getComment(42);
 
+        $this->assertCount(
+            1,
+            chronicle()->getAllRecords()
+        );
+
         $this->assertEquals(
             Activity::where('subject_id', $comment->id)->first()->user_id,
             42
@@ -154,6 +175,11 @@ class RecordsActivityTest extends TestBase {
         );
 
         $quote = $this->getQuote(42);
+
+        $this->assertCount(
+            1,
+            chronicle()->getAllRecords()
+        );
 
         $this->assertEquals(
             Activity::where('subject_id', $quote->id)->first()->user_id,
