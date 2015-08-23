@@ -15,7 +15,7 @@ class ChronicleTest extends TestBase {
 
     protected function getPost()
     {
-        return Post::create();
+        return Post::create([]);
     }
 
     protected function getOldActivity($subject, $created)

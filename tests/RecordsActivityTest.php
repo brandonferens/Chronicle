@@ -16,7 +16,7 @@ class RecordsActivityTest extends TestBase {
 
     protected function getCategory()
     {
-        return Category::create();
+        return Category::create([]);
     }
 
     protected function getComment($user_id = 1)
