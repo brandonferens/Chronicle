@@ -94,7 +94,7 @@ class RecordsActivityTest extends TestBase {
 
         $this->assertCount(
             1,
-            chronicle()->getAllRecords()
+            $this->app->make('chronicle')->getAllRecords()
         );
 
         $comment->user_id = 2;
