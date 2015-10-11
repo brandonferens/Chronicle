@@ -113,7 +113,7 @@ class Chronicle {
             $activity->limit($limit);
         }
 
-        return $activity->get();
+        return $activity->latest()->get();
     }
 
     /**
@@ -136,7 +136,7 @@ class Chronicle {
             $activity->limit($limit);
         }
 
-        return $activity->get();
+        return $activity->latest()->get();
     }
 
     /**
