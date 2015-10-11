@@ -54,6 +54,8 @@ Installing Chronicle is simple.
 
     Chronicle::getAllRecords();
 
+    Chronicle::getRecords($limit);
+
     chronicle()->getUserActivity(Auth::user());
 
     Chronicle::getActivitiesOlderThan($carbon);

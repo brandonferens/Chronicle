@@ -93,24 +93,48 @@ class Chronicle {
      */
     public function getAllRecords()
     {
+        return $this->getRecords();
+    }
+
+    /**
+     * Getter for records
+     *
+     * @param int|null $limit
+     * @return Collection
+     */
+    public function getRecords($limit = null)
+    {
         $modelName = $this->modelName;
 
-        return $modelName::all();
+        if(is_null($limit))
+        {
+            return $modelName::all();
+        }
+
+        return $modelName::limit($limit)->get();
     }
 
     /**
      * Getter for a users activity
      *
      * @param Model|int $user
+     * @param int|null $limit
      * @return Collection
      */
-    public function getUserActivity($user)
+    public function getUserActivity($user, $limit = null)
     {
         $user = $this->getUserId($user);
 
         $modelName = $this->modelName;
 
-        return $modelName::belongsToUser($user)->get();
+        $activity = $modelName::belongsToUser($user);
+
+        if(!is_null($limit))
+        {
+            $activity->limit($limit);
+        }
+
+        return $activity->get();
     }
 
     /**

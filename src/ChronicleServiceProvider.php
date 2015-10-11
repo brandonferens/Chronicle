@@ -7,7 +7,7 @@ use Illuminate\Support\ServiceProvider;
 
 class ChronicleServiceProvider extends ServiceProvider {
 
-    const version = '1.0.1';
+    const version = '1.0.2';
 
     /**
      * Register the service provider.
