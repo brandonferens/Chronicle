@@ -83,7 +83,7 @@ class Chronicle {
     {
         $modelName = $this->modelName;
 
-        return $modelName::find($id);
+        return $modelName::with('subject')->find($id);
     }
 
     /**
@@ -106,12 +106,14 @@ class Chronicle {
     {
         $modelName = $this->modelName;
 
-        if(is_null($limit))
+        $activity = $modelName::with('subject');
+
+        if(!is_null($limit))
         {
-            return $modelName::all();
+            $activity->limit($limit);
         }
 
-        return $modelName::limit($limit)->get();
+        return $activity->get();
     }
 
     /**
