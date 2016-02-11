@@ -10,7 +10,7 @@
         "laravel",
         "laravel5"
     ],
-    "version": "1.0.5",
+    "version": "1.0.6",
     "authors": [
         {
             "name": "Hyleeh",
@@ -29,7 +29,10 @@
 	"autoload": {
 		"psr-4": {
             "Kenarkose\\Chronicle\\": "src/"
-		}
+		},
+        "files": [
+            "src/helpers.php"
+        ]
 	},
     "autoload-dev": {
         "classmap": [

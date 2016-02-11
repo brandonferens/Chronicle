@@ -7,7 +7,24 @@ use Illuminate\Support\ServiceProvider;
 
 class ChronicleServiceProvider extends ServiceProvider {
 
-    const version = '1.0.5';
+    const version = '1.0.6';
+
+    /**
+     * Indicates if loading of the provider is deferred.
+     *
+     * @var bool
+     */
+    protected $defer = true;
+
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function provides()
+    {
+        return ['chronicle'];
+    }
 
     /**
      * Register the service provider.
@@ -34,8 +51,6 @@ class ChronicleServiceProvider extends ServiceProvider {
         $this->publishes([
             __DIR__ . '/database/migrations/' => database_path('/migrations')
         ], 'migrations');
-
-        require __DIR__ . '/helpers.php';
     }
 
 }
