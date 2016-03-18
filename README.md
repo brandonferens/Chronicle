@@ -10,7 +10,7 @@ User activity logging for Laravel 5.
 Chronicle provides a simple way to record user activity for Laravel 5 and is [based on a Laracasts lesson](https://github.com/laracasts/Build-An-Activity-Feed-in-Laravel). Chronicle extends the functionality that is offered by the lesson.
 
 ## Features
-- Compatible with Laravel 5.0 and 5.1
+- Compatible with Laravel 5, 5.1 and 5.2
 - Clean API for recording user activity
 - Auto-recording of activities by hooking up to model events
 - Time and user based activity filtering
