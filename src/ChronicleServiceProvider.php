@@ -7,7 +7,7 @@ use Illuminate\Support\ServiceProvider;
 
 class ChronicleServiceProvider extends ServiceProvider {
 
-    const version = '1.1.0';
+    const version = '1.1.3';
 
     /**
      * Indicates if loading of the provider is deferred.
