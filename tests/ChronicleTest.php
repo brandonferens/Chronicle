@@ -8,9 +8,7 @@ class ChronicleTest extends TestBase {
 
     protected function getChronicle()
     {
-        $repository = new Repository([]);
-
-        return new Chronicle($repository);
+        return app()->make('Kenarkose\Chronicle\Chronicle');
     }
 
     protected function getPost()
@@ -68,6 +66,53 @@ class ChronicleTest extends TestBase {
         $this->assertEquals(
             $record->subject->getKey(),
             $post->getKey()
+        );
+    }
+
+    /** @test */
+    function it_does_not_record_when_disabled()
+    {
+        $chronicle = $this->getChronicle();
+
+        $post = $this->getPost();
+
+        $this->app['config']->set('chronicle.enabled', false);
+
+        $record = $chronicle->record(
+            $post,
+            'created_post',
+            1
+        );
+
+        $this->assertFalse($record);
+    }
+
+    /** @test */
+    function it_checks_if_enabled()
+    {
+        $chronicle = $this->getChronicle();
+
+        $this->assertTrue(
+            $chronicle->isEnabled()
+        );
+
+        $this->app['config']->set('chronicle.enabled', false);
+
+        $this->assertFalse(
+            $chronicle->isEnabled()
+        );
+
+        $this->app['config']->set('chronicle.enabled', true);
+    }
+
+    /** @test */
+    function it_returns_model_name()
+    {
+        $chronicle = $this->getChronicle();
+
+        $this->assertEquals(
+            'Kenarkose\Chronicle\Activity',
+            $chronicle->getModelName()
         );
     }
 
@@ -446,4 +491,25 @@ class ChronicleTest extends TestBase {
         );
     }
 
+    /** @test */
+    function it_pauses_and_resumes_recording()
+    {
+        $chronicle = $this->getChronicle();
+
+        $this->assertTrue(
+            $chronicle->isEnabled()
+        );
+
+        $chronicle->pauseRecording();
+
+        $this->assertFalse(
+            $chronicle->isEnabled()
+        );
+
+        $chronicle->resumeRecording();
+
+        $this->assertTrue(
+            $chronicle->isEnabled()
+        );
+    }
 }

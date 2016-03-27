@@ -15,6 +15,7 @@ Chronicle provides a simple way to record user activity for Laravel 5 and is [ba
 - Auto-recording of activities by hooking up to model events
 - Time and user based activity filtering
 - Flushing activities for clean-up
+- Enabling/disabling and pausing/resuming recording activities.
 - A [phpunit](http://www.phpunit.de) test suite for easy development
 
 ## Installation
@@ -61,9 +62,14 @@ Installing Chronicle is simple.
     Chronicle::getActivitiesOlderThan($carbon);
 
     chronicle()->flushOlderThan($unixTimestamp);
+    
+    // You can pause and resume recording if you like for the request
+    chronicle()->pauseRecording();
+    // --- non-recorded actions
+    chronicle()->resumeRecording();
     ```
 
-    In order to register the Facade add following the facades to the end of `aliases` array in your `config/app.php` file.
+    In order to register the Facade add the following line to the end of `aliases` array in your `config/app.php` file.
     ```php
     'aliases' => array(
     

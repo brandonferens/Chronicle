@@ -9,11 +9,14 @@ use Illuminate\Database\Eloquent\Model;
 class Chronicle {
 
     /**
-     * Name of the activity class
-     *
-     * @var string
+     * @var bool
      */
-    protected $modelName;
+    protected $paused = false;
+
+    /**
+     * @var Repository
+     */
+    protected $config;
 
     /**
      * Constructor
@@ -22,7 +25,7 @@ class Chronicle {
      */
     public function __construct(Repository $config)
     {
-        $this->modelName = $config->get('chronicle.model', 'Kenarkose\Chronicle\Activity');
+        $this->config = $config;
     }
 
     /**
@@ -35,7 +38,13 @@ class Chronicle {
      */
     public function record(Model $model, $name, $user = null)
     {
-        $activity = new $this->modelName;
+        if (! $this->isEnabled())
+        {
+            return false;
+        }
+
+        $modelName = $this->getModelName();
+        $activity = new $modelName;
 
         // Auto determine user if none is supplied
         $user = $this->getUserId($user);
@@ -53,6 +62,26 @@ class Chronicle {
     }
 
     /**
+     * Checks if recording is enabled
+     *
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return (!$this->paused && $this->config->get('chronicle.enabled', true));
+    }
+
+    /**
+     * Returns the model name
+     *
+     * @return string
+     */
+    public function getModelName()
+    {
+        return $this->config->get('chronicle.model', 'Kenarkose\Chronicle\Activity');
+    }
+
+    /**
      * Determines current user
      *
      * @param Model|int $user
@@ -65,7 +94,7 @@ class Chronicle {
             $user = auth()->user();
         }
 
-        if($user instanceof Model)
+        if ($user instanceof Model)
         {
             $user = $user->getKey();
         }
@@ -81,7 +110,7 @@ class Chronicle {
      */
     public function getRecord($id)
     {
-        $modelName = $this->modelName;
+        $modelName = $this->getModelName();
 
         return $modelName::with('subject')->find($id);
     }
@@ -104,11 +133,11 @@ class Chronicle {
      */
     public function getRecords($limit = null)
     {
-        $modelName = $this->modelName;
+        $modelName = $this->getModelName();
 
         $activity = $modelName::with('subject');
 
-        if(!is_null($limit))
+        if ( ! is_null($limit))
         {
             $activity->limit($limit);
         }
@@ -127,11 +156,11 @@ class Chronicle {
     {
         $user = $this->getUserId($user);
 
-        $modelName = $this->modelName;
+        $modelName = $this->getModelName();
 
         $activity = $modelName::belongsToUser($user);
 
-        if(!is_null($limit))
+        if ( ! is_null($limit))
         {
             $activity->limit($limit);
         }
@@ -148,7 +177,7 @@ class Chronicle {
      */
     public function getActivitiesOlderThan($time)
     {
-        $modelName = $this->modelName;
+        $modelName = $this->getModelName();
 
         return $modelName::olderThan($time)->get();
     }
@@ -158,7 +187,7 @@ class Chronicle {
      */
     public function flush()
     {
-        $modelName = $this->modelName;
+        $modelName = $this->getModelName();
 
         $modelName::truncate();
     }
@@ -170,9 +199,25 @@ class Chronicle {
      */
     public function flushOlderThan($time)
     {
-        $modelName = $this->modelName;
+        $modelName = $this->getModelName();
 
         $modelName::olderThan($time)->delete();
+    }
+
+    /**
+     * Pauses recording
+     */
+    public function pauseRecording()
+    {
+        $this->paused = true;
+    }
+
+    /**
+     * Resumes auto-recording
+     */
+    public function resumeRecording()
+    {
+        $this->paused = false;
     }
 
 }
