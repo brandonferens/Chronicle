@@ -7,7 +7,7 @@ use Illuminate\Support\ServiceProvider;
 
 class ChronicleServiceProvider extends ServiceProvider {
 
-    const version = '1.2.0';
+    const version = '1.2.1';
 
     /**
      * Indicates if loading of the provider is deferred.
@@ -44,13 +44,16 @@ class ChronicleServiceProvider extends ServiceProvider {
      */
     public function boot()
     {
-        $this->publishes([
-            __DIR__ . '/resources/config.php' => config_path('chronicle.php')
-        ], 'config');
+        if ( ! $this->app->environment('production'))
+        {
+            $this->publishes([
+                __DIR__ . '/resources/config.php' => config_path('chronicle.php')
+            ], 'config');
 
-        $this->publishes([
-            __DIR__ . '/database/migrations/' => database_path('/migrations')
-        ], 'migrations');
+            $this->publishes([
+                __DIR__ . '/database/migrations/' => database_path('/migrations')
+            ], 'migrations');
+        }
     }
 
 }
