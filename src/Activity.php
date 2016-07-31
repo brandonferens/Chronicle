@@ -24,7 +24,7 @@ class Activity extends Eloquent {
     {
         return $this->belongsTo(
             $this->getUserModelName()
-        );
+        )->withTrashed();
     }
 
     /**
@@ -74,6 +74,16 @@ class Activity extends Eloquent {
         }
 
         return $query->where('created_at', '<=', $time->toDateTimeString())->latest();
+    }
+
+    /**
+     * Returns the activity subject name
+     *
+     * @return string
+     */
+    public function getSubjectName()
+    {
+        return str_plural(strtolower(class_basename($this->subject_type)));
     }
 
 }

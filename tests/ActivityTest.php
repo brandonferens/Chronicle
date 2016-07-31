@@ -99,4 +99,17 @@ class ActivityTest extends TestBase {
         );
     }
 
+    /** @test */
+    function it_gets_subject_name()
+    {
+        $user = $this->getUser();
+
+        $activity = $this->getActivity($user->getKey());
+
+        $this->assertEquals(
+            $activity->getSubjectName(),
+            'posts'
+        );
+    }
+
 }
