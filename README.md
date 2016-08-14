@@ -26,7 +26,7 @@ Installing Chronicle is simple.
     ```js
     {
         "require": {
-            "kenarkose/chronicle": "~1.3"
+            "kenarkose/chronicle": "~1.4"
         }
     }
     ```

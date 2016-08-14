@@ -19,6 +19,8 @@ class TestBase extends TestCase {
             'database' => ':memory:',
             'prefix'   => ''
         ]);
+
+        $app['config']->set('chronicle.user_model', 'User');
     }
 
     protected function getPackageProviders($app)

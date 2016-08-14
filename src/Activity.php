@@ -34,7 +34,7 @@ class Activity extends Eloquent {
      */
     protected function getUserModelName()
     {
-        return config()->get('auth.model', 'App\User');
+        return config()->get('chronicle.user_model', 'App\User');
     }
 
     /**
