@@ -22,9 +22,14 @@ class Activity extends Eloquent {
      */
     public function user()
     {
-        return $this->belongsTo(
-            $this->getUserModelName()
-        )->withTrashed();
+        $relation = $this->belongsTo($this->getUserModelName());
+
+        if (in_array('Illuminate\Database\Eloquent\SoftDeletes', class_uses($this->getUserModelName())))
+        {
+            $relation->withTrashed();
+        }
+
+        return $relation;
     }
 
     /**
