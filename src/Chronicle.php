@@ -36,9 +36,9 @@ class Chronicle {
      * @param Model|int $user
      * @return Model
      */
-    public function record(Model $model, $name, $user = null)
+    public function record(Model $model = null, $name, $user = null)
     {
-        if (! $this->isEnabled())
+        if ( ! $this->isEnabled())
         {
             return false;
         }
@@ -49,12 +49,18 @@ class Chronicle {
         // Auto determine user if none is supplied
         $user = $this->getUserId($user);
 
-        $activity->fill([
-            'subject_id'   => $model->getKey(),
-            'subject_type' => get_class($model),
-            'name'         => $name,
-            'user_id'      => $user
-        ]);
+        $data = [
+            'name'    => $name,
+            'user_id' => $user
+        ];
+
+        if ($model)
+        {
+            $data['subject_id'] = $model->getKey();
+            $data['subject_type'] = get_class($model);
+        }
+
+        $activity->fill($data);
 
         $activity->save();
 
@@ -68,7 +74,7 @@ class Chronicle {
      */
     public function isEnabled()
     {
-        return (!$this->paused && $this->config->get('chronicle.enabled', true));
+        return ( ! $this->paused && $this->config->get('chronicle.enabled', true));
     }
 
     /**
