@@ -2,10 +2,10 @@
 
 namespace Kenarkose\Chronicle;
 
-
 use ReflectionClass;
 
-trait RecordsActivity {
+trait RecordsActivity
+{
 
     /**
      * Registers the event listeners
@@ -17,6 +17,14 @@ trait RecordsActivity {
             static::$event(function ($model) use ($event)
             {
                 $model->recordActivity($event);
+            });
+        }
+
+        if (static::deleteActivityOnCascade())
+        {
+            static::deleting(function ($model)
+            {
+                $model->deleteActivity();
             });
         }
     }
@@ -32,6 +40,17 @@ trait RecordsActivity {
         return chronicle()->record(
             $this,
             $this->getActivityName($event),
+            $this->getUserId()
+        );
+    }
+
+    /**
+     * Deletes an activity through chronicle
+     */
+    public function deleteActivity()
+    {
+        chronicle()->delete(
+            $this,
             $this->getUserId()
         );
     }
@@ -88,4 +107,15 @@ trait RecordsActivity {
         ];
     }
 
+    /**
+     * Returns if an activity should be deleted when its parent subject is deleted
+     *
+     * @return bool
+     */
+    protected static function deleteActivityOnCascade()
+    {
+        return isset(static::$deleteActivityOnCascade)
+            ? (bool) static::$deleteActivityOnCascade
+            : false;
+    }
 }

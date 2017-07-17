@@ -2,7 +2,6 @@
 
 namespace Kenarkose\Chronicle;
 
-
 use Illuminate\Config\Repository;
 use Illuminate\Database\Eloquent\Model;
 
@@ -31,9 +30,10 @@ class Chronicle {
     /**
      * Records an activity
      *
-     * @param Model $model
-     * @param string $name
+     * @param Model     $model
+     * @param string    $name
      * @param Model|int $user
+     *
      * @return Model
      */
     public function record(Model $model = null, $name, $user = null)
@@ -43,8 +43,7 @@ class Chronicle {
             return false;
         }
 
-        $modelName = $this->getModelName();
-        $activity = new $modelName;
+        $activity = $this->initActivity();
 
         // Auto determine user if none is supplied
         $user = $this->getUserId($user);
@@ -68,6 +67,34 @@ class Chronicle {
     }
 
     /**
+     * Deletes an activity
+     *
+     * @param Model     $model
+     * @param Model|int $user
+     *
+     * @return Model
+     */
+    public function delete(Model $model, $user = null)
+    {
+        if (! $this->isEnabled()) {
+            return false;
+        }
+
+        $activity = $this->initActivity();
+
+        // Auto determine user if none is supplied
+        $user = $this->getUserId($user);
+
+        $data = [
+            'user_id'      => $user,
+            'subject_id'   => $model->getKey(),
+            'subject_type' => get_class($model)
+        ];
+
+        $activity->where($data)->delete();
+    }
+
+    /**
      * Checks if recording is enabled
      *
      * @return bool
@@ -85,6 +112,18 @@ class Chronicle {
     public function getModelName()
     {
         return $this->config->get('chronicle.model', 'Kenarkose\Chronicle\Activity');
+    }
+
+    /**
+     * New up and return the Activity class
+     *
+     * @return mixed
+     */
+    protected function initActivity()
+    {
+        $modelName = $this->getModelName();
+
+        return new $modelName;
     }
 
     /**
@@ -225,5 +264,4 @@ class Chronicle {
     {
         $this->paused = false;
     }
-
 }
