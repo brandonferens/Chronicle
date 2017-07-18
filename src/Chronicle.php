@@ -174,9 +174,10 @@ class Chronicle {
      * Getter for records
      *
      * @param int|null $limit
+     * @param array|string|null $name
      * @return Collection
      */
-    public function getRecords($limit = null)
+    public function getRecords($limit = null, $name = null)
     {
         $modelName = $this->getModelName();
 
@@ -187,6 +188,16 @@ class Chronicle {
             $activity->limit($limit);
         }
 
+        if ($name)
+        {
+            if ( ! is_array($name))
+            {
+                $name = [$name];
+            }
+
+            $activity->whereIn('name', $name);
+        }
+
         return $activity->latest()->get();
     }
 
@@ -195,9 +206,10 @@ class Chronicle {
      *
      * @param Model|int $user
      * @param int|null $limit
+     * @param array|string|null $name
      * @return Collection
      */
-    public function getUserActivity($user, $limit = null)
+    public function getUserActivity($user, $limit = null, $name = null)
     {
         $user = $this->getUserId($user);
 
@@ -208,6 +220,16 @@ class Chronicle {
         if ( ! is_null($limit))
         {
             $activity->limit($limit);
+        }
+
+        if ($name)
+        {
+            if ( ! is_array($name))
+            {
+                $name = [$name];
+            }
+
+            $activity->whereIn('name', $name);
         }
 
         return $activity->latest()->get();
