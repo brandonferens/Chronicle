@@ -30,10 +30,9 @@ class Chronicle {
     /**
      * Records an activity
      *
-     * @param Model     $model
-     * @param string    $name
+     * @param Model $model
+     * @param string $name
      * @param Model|int $user
-     *
      * @return Model
      */
     public function record(Model $model = null, $name, $user = null)
@@ -69,7 +68,7 @@ class Chronicle {
     /**
      * Deletes an activity
      *
-     * @param Model     $model
+     * @param Model $model
      * @param Model|int $user
      *
      * @return Model
