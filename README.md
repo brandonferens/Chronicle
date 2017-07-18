@@ -58,6 +58,9 @@ Installing Chronicle is simple.
     Chronicle::getRecords($limit);
 
     chronicle()->getUserActivity(Auth::user());
+    // You can further limit activity to certain event types
+    chronicle()->getUserActivity(Auth::user(), null, 'created_reply');
+    chronicle()->getUserActivity(Auth::user(), null, ['created_reply', 'created_post']);
 
     Chronicle::getActivitiesOlderThan($carbon);
 
@@ -83,7 +86,7 @@ Installing Chronicle is simple.
 
     A good place to register chronicle recording actions are inside the 'App\Providers\EventServiceProvider' class that is provided by Laravel 5.
 
-5. Additionally, you may use the 'Kenarkose\Chronicle\RecordsActivity' trait for automatically recording 'created', 'updated', and 'deleted' model events by default on any Eloquent model. Furthermore, you may specify which events are going to be recorded by defining the static $recordEvents property.
+5. Additionally, you may use the 'Kenarkose\Chronicle\RecordsActivity' trait for automatically recording 'created', 'updated', and 'deleted' model events by default on any Eloquent model. Furthermore, you may specify which events are going to be recorded by defining the static `$recordEvents` property.
     ```php
     namespace App;
 
@@ -94,6 +97,20 @@ Installing Chronicle is simple.
         use RecordsActivity;
 
         protected static $recordEvents = ['created'];
+    }
+    ```
+    
+6. Finally, you may find it necessary for a recorded activity to be removed if its subject has been removed. For example, a user replied to a post, but then decided to delete that reply. It may not be necessary to keep the activity record around, so the static property `$deleteActivityOnCascade` can be set to automatically remove the activity.
+    ```php
+    namespace App;
+
+    use Kenarkose\Chronicle\RecordsActivity;
+
+    class Post
+    {
+        use RecordsActivity;
+
+        protected static $deleteActivityOnCascade = true;
     }
     ```
 
